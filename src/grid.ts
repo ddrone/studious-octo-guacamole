@@ -33,6 +33,7 @@ class GridLogic {
   end: Point;
   rows: number;
   columns: number;
+  path: GridPath|undefined;
 
   constructor(attrs: GridAttrs) {
     this.cells = [];
@@ -68,7 +69,7 @@ class GridLogic {
     }
 
     this.cells[p.row][p.col] = value;
-    this.computePath();
+    this.path = this.computePath();
   }
 
   isValid(p: Point) {
@@ -86,6 +87,25 @@ class GridLogic {
     return deltas.map(d => addPoints(p, d)).filter(p => this.isValid(p));
   }
 
+  debugDistanceMap(dist: Map<number, number>) {
+    const map: string[][] = [];
+    for (let row = 0; row < this.rows; row++) {
+      const outputRow: string[] = [];
+      for (let col = 0; col < this.columns; col++) {
+        const id = this.pointId({row, col});
+        const distance = dist.get(id);
+        if (distance === undefined) {
+          outputRow.push('x');
+        }
+        else {
+          outputRow.push(`${distance}`)
+        }
+      }
+      map.push(outputRow);
+    }
+    console.table(map);
+  }
+
   computePath(): GridPath|undefined {
     interface QueueItem {
       point: Point;
@@ -100,6 +120,7 @@ class GridLogic {
 
     while (queue.length > 0) {
       const current = queue.splice(0, 1)[0];
+      distances.set(this.pointId(current.point), current.distance);
       
       for (const next of this.validAdjacentPoints(current.point)) {
         const nextId = this.pointId(next);
@@ -107,7 +128,6 @@ class GridLogic {
           continue;
         }
 
-        distances.set(nextId, current.distance + 1);
         queue.push({
           point: next,
           distance: current.distance + 1
@@ -129,7 +149,6 @@ class GridLogic {
     outer: for (let distance = endDistance - 1; distance > 0; distance--) {
       result.points.push(current);
       result.idSet.add(this.pointId(current));
-      console.log({current, distance});
 
       for (const next of this.validAdjacentPoints(current)) {
         const nextDistance = distances.get(this.pointId(next));
@@ -142,7 +161,6 @@ class GridLogic {
       throw new Error("internal error: should have one neighbor with decreased distance");
     }
 
-    console.log(result);
     return result;
   }
 }
