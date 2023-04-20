@@ -86,7 +86,7 @@ class GridLogic {
     return deltas.map(d => addPoints(p, d)).filter(p => this.isValid(p));
   }
 
-  computePath() {
+  computePath(): GridPath|undefined {
     interface QueueItem {
       point: Point;
       distance: number;
@@ -115,7 +115,35 @@ class GridLogic {
       }
     }
 
-    console.log(distances);
+    const endDistance = distances.get(this.pointId(this.end));
+    if (endDistance === undefined) {
+      return undefined;
+    }
+
+    const result: GridPath = {
+      points: [],
+      idSet: new Set<number>()
+    }
+
+    let current = this.end;
+    outer: for (let distance = endDistance - 1; distance > 0; distance--) {
+      result.points.push(current);
+      result.idSet.add(this.pointId(current));
+      console.log({current, distance});
+
+      for (const next of this.validAdjacentPoints(current)) {
+        const nextDistance = distances.get(this.pointId(next));
+        if (nextDistance === distance) {
+          current = next;
+          continue outer;
+        }
+      }
+
+      throw new Error("internal error: should have one neighbor with decreased distance");
+    }
+
+    console.log(result);
+    return result;
   }
 }
 
