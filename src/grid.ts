@@ -9,6 +9,10 @@ export function pointEquals(p1: Point, p2: Point) {
   return p1.row === p2.row && p1.col === p2.col;
 }
 
+export function addPoints(p1: Point, p2: Point) {
+  return {row: p1.row + p2.row, col: p1.col + p2.col};
+}
+
 export interface GridAttrs {
   rows: number;
   columns: number;
@@ -17,10 +21,18 @@ export interface GridAttrs {
   end: Point;
 }
 
+interface GridPath {
+  points: Point[];
+  idSet: Set<number>;
+}
+
 class GridLogic {
+  // "true" means that cell on this coordinate is blocked
   cells: boolean[][];
   start: Point;
   end: Point;
+  rows: number;
+  columns: number;
 
   constructor(attrs: GridAttrs) {
     this.cells = [];
@@ -31,6 +43,8 @@ class GridLogic {
 
     this.start = attrs.start;
     this.end = attrs.end;
+    this.rows = attrs.rows;
+    this.columns = attrs.columns;
   }
 
   describe(p: Point): string {
@@ -43,8 +57,65 @@ class GridLogic {
     return this.cells[p.row][p.col] ? 'x' : 'o';
   }
 
+  // Needed to avoid storing objects in the Set, which JavaScript does not allow
+  pointId(p: Point): number {
+    return p.row * this.columns + p.col;
+  }
+
   set(p: Point, value: boolean) {
+    if (pointEquals(p, this.start) || pointEquals(p, this.end)) {
+      return;
+    }
+
     this.cells[p.row][p.col] = value;
+    this.computePath();
+  }
+
+  isValid(p: Point) {
+    return p.row >= 0 && p.row < this.rows && p.col >= 0 && p.col < this.columns && !this.cells[p.row][p.col];
+  }
+
+  validAdjacentPoints(p: Point): Point[] {
+    const deltas: Point[] = [
+      {row: 0, col: 1},
+      {row: 0, col: -1},
+      {row: 1, col: 0},
+      {row: -1, col: 0},
+    ]
+
+    return deltas.map(d => addPoints(p, d)).filter(p => this.isValid(p));
+  }
+
+  computePath() {
+    interface QueueItem {
+      point: Point;
+      distance: number;
+    };
+
+    const distances = new Map<number, number>();
+    const queue: QueueItem[] = [{
+      point: this.start,
+      distance: 0,
+    }];
+
+    while (queue.length > 0) {
+      const current = queue.splice(0, 1)[0];
+      
+      for (const next of this.validAdjacentPoints(current.point)) {
+        const nextId = this.pointId(next);
+        if (distances.has(nextId)) {
+          continue;
+        }
+
+        distances.set(nextId, current.distance + 1);
+        queue.push({
+          point: next,
+          distance: current.distance + 1
+        });
+      }
+    }
+
+    console.log(distances);
   }
 }
 
