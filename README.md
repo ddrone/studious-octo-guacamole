@@ -9,3 +9,4 @@ A simple optimization game
 * [ ] Draw the UI in a prettier way, maybe using some sprites
 * [ ] Implement support for partial grids
 * [ ] Implement support for hexagonal grids
+* [ ] On rectangular grids, implement support for fences of variable length between the cells
