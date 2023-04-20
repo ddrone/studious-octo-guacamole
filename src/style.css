@@ -1,3 +1,7 @@
 .interactive {
   user-select: none;
 }
+
+.bold {
+  font-weight: bold;
+}

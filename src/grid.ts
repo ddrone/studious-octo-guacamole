@@ -46,6 +46,7 @@ class GridLogic {
     this.end = attrs.end;
     this.rows = attrs.rows;
     this.columns = attrs.columns;
+    this.path = this.computePath();
   }
 
   describe(p: Point): string {
@@ -70,6 +71,14 @@ class GridLogic {
 
     this.cells[p.row][p.col] = value;
     this.path = this.computePath();
+  }
+
+  isOnPath(p: Point) {
+    if (this.path === undefined) {
+      return false;
+    }
+
+    return this.path.idSet.has(this.pointId(p));
   }
 
   isValid(p: Point) {
@@ -146,7 +155,7 @@ class GridLogic {
     }
 
     let current = this.end;
-    outer: for (let distance = endDistance - 1; distance > 0; distance--) {
+    outer: for (let distance = endDistance - 1; distance >= 0; distance--) {
       result.points.push(current);
       result.idSet.add(this.pointId(current));
 
@@ -161,6 +170,9 @@ class GridLogic {
       throw new Error("internal error: should have one neighbor with decreased distance");
     }
 
+    result.points.push(current);
+    result.idSet.add(this.pointId(current));
+
     return result;
   }
 }
@@ -174,7 +186,7 @@ export class Grid implements m.ClassComponent<GridAttrs> {
   }
 
   renderCell(attrs: GridAttrs, p: Point, value: boolean): m.Child {
-    return m('td.interactive',
+    return m('td.interactive' + (this.gridLogic.isOnPath(p) ? '.bold' : ''),
       {
         onclick: () => {
           this.gridLogic.set(p, !value);
