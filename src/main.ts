@@ -7,6 +7,16 @@ class Main implements m.ClassComponent {
     return m(Grid, {
       rows: 5,
       columns: 4,
+
+      startPoint: {
+        row: 0,
+        col: 0,
+      },
+
+      endPoint: {
+        row: 4,
+        col: 3,
+      }
     })
   }
 }
