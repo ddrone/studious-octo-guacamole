@@ -1,6 +1,6 @@
 import './style.css';
 import m from 'mithril';
-import { Grid } from './grid';
+import { Grid, Point } from './grid';
 
 class Main implements m.ClassComponent {
   view(): m.Child {
@@ -8,15 +8,8 @@ class Main implements m.ClassComponent {
       rows: 5,
       columns: 4,
 
-      start: {
-        row: 0,
-        col: 0,
-      },
-
-      end: {
-        row: 4,
-        col: 3,
-      }
+      start: new Point(0, 0),
+      end: new Point(4, 3),
     })
   }
 }

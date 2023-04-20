@@ -1,16 +1,21 @@
 import m from 'mithril';
 
-export interface Point {
+export class Point {
   row: number;
   col: number;
-}
 
-export function pointEquals(p1: Point, p2: Point) {
-  return p1.row === p2.row && p1.col === p2.col;
-}
+  constructor(row: number, col: number) {
+    this.row = row;
+    this.col = col;
+  }
 
-export function addPoints(p1: Point, p2: Point) {
-  return {row: p1.row + p2.row, col: p1.col + p2.col};
+  equalsTo(p: Point): boolean {
+    return p.row === this.row && p.col === this.col;
+  }
+
+  addTo(p: Point): Point {
+    return new Point(p.row + this.row, p.col + this.col);
+  }
 }
 
 export interface GridAttrs {
@@ -50,10 +55,10 @@ class GridLogic {
   }
 
   describe(p: Point): string {
-    if (pointEquals(this.start, p)) {
+    if (p.equalsTo(this.start)) {
       return 's';
     }
-    if (pointEquals(this.end, p)) {
+    if (p.equalsTo(this.end)) {
       return 'e';
     }
     return this.cells[p.row][p.col] ? 'x' : 'o';
@@ -65,7 +70,7 @@ class GridLogic {
   }
 
   set(p: Point, value: boolean) {
-    if (pointEquals(p, this.start) || pointEquals(p, this.end)) {
+    if (p.equalsTo(this.start) || p.equalsTo(this.end)) {
       return;
     }
 
@@ -87,13 +92,13 @@ class GridLogic {
 
   validAdjacentPoints(p: Point): Point[] {
     const deltas: Point[] = [
-      {row: 0, col: 1},
-      {row: 0, col: -1},
-      {row: 1, col: 0},
-      {row: -1, col: 0},
+      new Point(0, 1),
+      new Point(0, -1),
+      new Point(1, 0),
+      new Point(-1, 0),
     ]
 
-    return deltas.map(d => addPoints(p, d)).filter(p => this.isValid(p));
+    return deltas.map(d => p.addTo(d)).filter(p => this.isValid(p));
   }
 
   debugDistanceMap(dist: Map<number, number>) {
@@ -101,7 +106,7 @@ class GridLogic {
     for (let row = 0; row < this.rows; row++) {
       const outputRow: string[] = [];
       for (let col = 0; col < this.columns; col++) {
-        const id = this.pointId({row, col});
+        const id = this.pointId(new Point(row, col));
         const distance = dist.get(id);
         if (distance === undefined) {
           outputRow.push('x');
@@ -199,7 +204,7 @@ export class Grid implements m.ClassComponent<GridAttrs> {
   view({attrs}: m.Vnode<GridAttrs>): m.Child {
     return m('table',
       this.gridLogic.cells.map((rowContent, row) =>
-        m('tr', rowContent.map((value, col) => this.renderCell(attrs, {row, col}, value))))
+        m('tr', rowContent.map((value, col) => this.renderCell(attrs, new Point(row, col), value))))
     );
   }
 }
