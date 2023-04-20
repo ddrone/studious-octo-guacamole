@@ -8,12 +8,12 @@ class Main implements m.ClassComponent {
       rows: 5,
       columns: 4,
 
-      startPoint: {
+      start: {
         row: 0,
         col: 0,
       },
 
-      endPoint: {
+      end: {
         row: 4,
         col: 3,
       }

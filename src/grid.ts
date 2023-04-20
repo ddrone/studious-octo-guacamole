@@ -13,43 +13,59 @@ export interface GridAttrs {
   rows: number;
   columns: number;
 
-  startPoint: Point;
-  endPoint: Point;
+  start: Point;
+  end: Point;
+}
+
+class GridLogic {
+  cells: boolean[][];
+  start: Point;
+  end: Point;
+
+  constructor(attrs: GridAttrs) {
+    this.cells = [];
+    for (let i = 0; i < attrs.rows; i++) {
+      const row: boolean[] = new Array(attrs.columns).fill(false);
+      this.cells.push(row);
+    }
+
+    this.start = attrs.start;
+    this.end = attrs.end;
+  }
+
+  describe(p: Point): string {
+    if (pointEquals(this.start, p)) {
+      return 's';
+    }
+    if (pointEquals(this.end, p)) {
+      return 'e';
+    }
+    return this.cells[p.row][p.col] ? 'x' : 'o';
+  }
 }
 
 export class Grid implements m.ClassComponent<GridAttrs> {
-  state: boolean[][] = [];
+  // TODO: Figure out a way to avoid this hack without having to do null checks everywhere
+  gridLogic: GridLogic = undefined as any;
 
   oninit(vnode: m.Vnode<GridAttrs>) {
-    for (let i = 0; i < vnode.attrs.rows; i++) {
-      const row: boolean[] = new Array(vnode.attrs.columns).fill(false);
-      this.state.push(row);
-    }
+    this.gridLogic = new GridLogic(vnode.attrs);
   }
 
   renderCell(attrs: GridAttrs, p: Point, value: boolean): m.Child {
-    const {row, col} = p;
-    let symbol = value ? 'x' : 'o';
-    if (pointEquals(attrs.startPoint, p)) {
-      symbol = 's';
-    }
-    if (pointEquals(attrs.endPoint, p)) {
-      symbol = 'e';
-    }
-
     return m('td.interactive',
       {
         onclick: () => {
-          this.state[row][col] = !value;
+          this.gridLogic.cells[p.row][p.col] = !value;
         }
       },
-      symbol
+      this.gridLogic.describe(p)
     );
   }
 
   view({attrs}: m.Vnode<GridAttrs>): m.Child {
     return m('table',
-      this.state.map((rowContent, row) =>
+      this.gridLogic.cells.map((rowContent, row) =>
         m('tr', rowContent.map((value, col) => this.renderCell(attrs, {row, col}, value))))
     );
   }
