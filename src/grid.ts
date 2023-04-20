@@ -42,6 +42,10 @@ class GridLogic {
     }
     return this.cells[p.row][p.col] ? 'x' : 'o';
   }
+
+  set(p: Point, value: boolean) {
+    this.cells[p.row][p.col] = value;
+  }
 }
 
 export class Grid implements m.ClassComponent<GridAttrs> {
@@ -56,7 +60,7 @@ export class Grid implements m.ClassComponent<GridAttrs> {
     return m('td.interactive',
       {
         onclick: () => {
-          this.gridLogic.cells[p.row][p.col] = !value;
+          this.gridLogic.set(p, !value);
         }
       },
       this.gridLogic.describe(p)
