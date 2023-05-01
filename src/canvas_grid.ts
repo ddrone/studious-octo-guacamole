@@ -31,10 +31,24 @@ export class CanvasGrid implements m.ClassComponent<GridAttrs> {
     }
   }
 
+  renderStart() {
+    const ctx = this.ctx;
+    ctx.fillStyle = '#666';
+    const start = this.gridLogic.start;
+    const x = start.row * (cellSize + gapSize) + gapSize + cellSize / 2;
+    const y = start.col * (cellSize + gapSize) + gapSize + cellSize / 2;
+    const r = cellSize * 0.45;
+
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, 2 * Math.PI);
+    ctx.fill();
+  }
+
   onupdate() {
     const ctx = this.ctx;
     ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
     this.renderGrid();
+    this.renderStart();
   }
 
   view(vnode: m.Vnode<GridAttrs>): m.Child {
