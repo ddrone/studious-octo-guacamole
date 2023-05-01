@@ -1,6 +1,7 @@
 import './style.css';
 import m from 'mithril';
-import { Grid, Point } from './grid';
+import { Grid } from './grid';
+import { Point } from './grid_logic';
 
 class Main implements m.ClassComponent {
   view(): m.Child {
