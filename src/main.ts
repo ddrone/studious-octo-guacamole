@@ -1,11 +1,11 @@
 import './style.css';
 import m from 'mithril';
-import { Grid } from './grid';
 import { Point } from './grid_logic';
+import { CanvasGrid } from './canvas_grid';
 
 class Main implements m.ClassComponent {
   view(): m.Child {
-    return m(Grid, {
+    return m(CanvasGrid, {
       rows: 5,
       columns: 4,
 
