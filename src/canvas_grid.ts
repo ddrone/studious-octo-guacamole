@@ -124,6 +124,10 @@ export class CanvasGrid implements m.ClassComponent<GridAttrs> {
             this.y = undefined;
           }
         },
+        onmouseout: () => {
+          this.x = undefined;
+          this.y = undefined;
+        },
         width: this.canvasWidth,
         height: this.canvasHeight,
         border: 1,
