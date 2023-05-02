@@ -1,5 +1,5 @@
 import m from 'mithril';
-import { GridAttrs, GridLogic } from './grid_logic';
+import { GridAttrs, GridLogic, Point } from './grid_logic';
 import { starPath } from './canvas_utils';
 
 const cellSize = 50;
@@ -17,9 +17,15 @@ function cellCenter(coord: number): number {
   return cellOffset(coord) + cellSize / 2;
 }
 
+function isSame(x: number, y: number, point: Point): boolean {
+  return point.col === x && point.row === y;
+}
+
 export class CanvasGrid implements m.ClassComponent<GridAttrs> {
   ctx: CanvasRenderingContext2D = undefined as any;
   gridLogic: GridLogic = undefined as any;
+  x?: number;
+  y?: number;
 
   get canvasHeight(): number {
     return cellOffset(this.gridLogic.rows);
@@ -92,6 +98,10 @@ export class CanvasGrid implements m.ClassComponent<GridAttrs> {
     this.renderGrid();
     this.renderStart();
     this.renderEnd();
+
+    if (this.x !== undefined && this.y !== undefined) {
+      this.renderCross(this.y, this.x);
+    }
   }
 
   view(vnode: m.Vnode<GridAttrs>): m.Child {
@@ -100,6 +110,19 @@ export class CanvasGrid implements m.ClassComponent<GridAttrs> {
         oncreate: (vnode: m.VnodeDOM) => {
           const canvas = vnode.dom as HTMLCanvasElement;
           this.ctx = canvas.getContext("2d")!;
+        },
+        onmousemove: (e: MouseEvent) => {
+          const bbox = (e.target as HTMLCanvasElement).getBoundingClientRect();
+          const cursorX = e.clientX - bbox.left;
+          const cursorY = e.clientY - bbox.top;
+
+          this.x = Math.floor(cursorX / (cellSize + gapSize));
+          this.y = Math.floor(cursorY / (cellSize + gapSize));
+
+          if (isSame(this.x, this.y, this.gridLogic.start) || isSame(this.x, this.y, this.gridLogic.end)) {
+            this.x = undefined;
+            this.y = undefined;
+          }
         },
         width: this.canvasWidth,
         height: this.canvasHeight,
