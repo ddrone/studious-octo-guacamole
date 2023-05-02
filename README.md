@@ -10,7 +10,8 @@ A simple optimization game
 * [x] Draw the UI in a prettier way on a canvas
   * [x] Make the cells clickable
   * [x] Render the path as a straight line
-* [ ] Figure out the performance issue on a larger grid
+* [x] Figure out the performance issue on a larger grid
+  * The issue was with traversal code: you have to check for whether you have visited already on extraction from the queue, not insertion (in the latter, you can insert an element several times)
 * [ ] Implement support for partial grids
 * [ ] Implement support for hexagonal grids
 * [ ] On rectangular grids, implement support for fences of variable length between the cells

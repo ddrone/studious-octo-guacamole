@@ -133,14 +133,13 @@ export class GridLogic {
 
     while (queue.length > 0) {
       const current = queue.splice(0, 1)[0];
+      const currentId = this.pointId(current.point);
+      if (distances.has(currentId)) {
+        continue;
+      }
       distances.set(this.pointId(current.point), current.distance);
       
       for (const next of this.validAdjacentPoints(current.point)) {
-        const nextId = this.pointId(next);
-        if (distances.has(nextId)) {
-          continue;
-        }
-
         queue.push({
           point: next,
           distance: current.distance + 1
