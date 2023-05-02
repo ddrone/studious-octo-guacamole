@@ -5,8 +5,12 @@ import { starPath } from './canvas_utils';
 const cellSize = 50;
 const gapSize = 5;
 
+function outerCellOffset(coord: number): number {
+  return (cellSize + gapSize) * coord;
+}
+
 function cellOffset(coord: number): number {
-  return (cellSize + gapSize) * coord + gapSize;
+  return outerCellOffset(coord) + gapSize;
 }
 
 function cellCenter(coord: number): number {
@@ -18,11 +22,11 @@ export class CanvasGrid implements m.ClassComponent<GridAttrs> {
   gridLogic: GridLogic = undefined as any;
 
   get canvasHeight(): number {
-    return this.gridLogic.rows * (cellSize + gapSize) + gapSize;
+    return cellOffset(this.gridLogic.rows);
   }
 
   get canvasWidth(): number {
-    return this.gridLogic.columns * (cellSize + gapSize) + gapSize;
+    return cellOffset(this.gridLogic.columns);
   }
 
   oninit(vnode: m.Vnode<GridAttrs>) {
@@ -33,10 +37,10 @@ export class CanvasGrid implements m.ClassComponent<GridAttrs> {
     const ctx = this.ctx;
     ctx.fillStyle = '#eee';
     for (let i = 0; i <= this.gridLogic.rows; i++) {
-      ctx.fillRect(0, i * (cellSize + gapSize), this.canvasWidth, gapSize);
+      ctx.fillRect(0, outerCellOffset(i), this.canvasWidth, gapSize);
     }
     for (let i = 0; i <= this.gridLogic.columns; i++) {
-      ctx.fillRect(i * (cellSize + gapSize), 0, gapSize, this.canvasHeight);
+      ctx.fillRect(outerCellOffset(i), 0, gapSize, this.canvasHeight);
     }
   }
 
