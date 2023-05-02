@@ -12,6 +12,8 @@ A simple optimization game
   * [x] Render the path as a straight line
 * [x] Figure out the performance issue on a larger grid
   * The issue was with traversal code: you have to check for whether you have visited already on extraction from the queue, not insertion (in the latter, you can insert an element several times)
+* [ ] Deploy the game online
+* [ ] Add a screenshot on Github
 * [ ] Implement support for partial grids
 * [ ] Implement support for hexagonal grids
 * [ ] On rectangular grids, implement support for fences of variable length between the cells
