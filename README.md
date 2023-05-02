@@ -12,7 +12,7 @@ A simple optimization game
   * [x] Render the path as a straight line
 * [x] Figure out the performance issue on a larger grid
   * The issue was with traversal code: you have to check for whether you have visited already on extraction from the queue, not insertion (in the latter, you can insert an element several times)
-* [ ] Add a display for the current path length
+* [x] Add a display for the current path length
 * [ ] Deploy the game online
 * [ ] Add a screenshot on Github
 * [ ] Implement support for partial grids

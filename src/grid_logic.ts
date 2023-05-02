@@ -38,6 +38,7 @@ export class GridLogic {
   rows: number;
   columns: number;
   path: GridPath|undefined;
+  bestPath?: number;
 
   constructor(attrs: GridAttrs) {
     this.cells = [];
@@ -175,6 +176,12 @@ export class GridLogic {
 
     result.points.push(current);
     result.idSet.add(this.pointId(current));
+
+    if (this.bestPath === undefined) {
+      this.bestPath = result.points.length;
+    } else {
+      this.bestPath = Math.max(this.bestPath, result.points.length);
+    }
 
     return result;
   }

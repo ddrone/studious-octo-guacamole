@@ -175,10 +175,12 @@ export class CanvasGrid implements m.ClassComponent<GridAttrs> {
         height: this.canvasHeight,
         border: 1,
       }),
-      m('button', {
-        onclick: () => {
-          console.log('What a hack')
-        }
-      }, 'Update'));
+      m('div',
+        this.gridLogic.path === undefined ?
+          m('span.red', 'Path is blocked!') :
+          `Current path: ${this.gridLogic.path.points.length}`,
+      ),
+      this.gridLogic.bestPath !== undefined &&
+        m('div', `Best path: ${this.gridLogic.bestPath}`));
   }
 }
