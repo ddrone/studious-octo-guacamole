@@ -8,7 +8,7 @@ A simple optimization game
 * [x] Implement shortest path search and display the current path length in the UI
 * [x] Highlight the cells that are a part of the shortest path
 * [ ] Draw the UI in a prettier way on a canvas
-  * [ ] Make the cells clickable
+  * [x] Make the cells clickable
   * [ ] Render the path as a curved line
 * [ ] Implement support for partial grids
 * [ ] Implement support for hexagonal grids

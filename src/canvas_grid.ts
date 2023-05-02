@@ -92,6 +92,23 @@ export class CanvasGrid implements m.ClassComponent<GridAttrs> {
     ctx.stroke();
   }
 
+  renderFilled(row: number, col: number) {
+    const x = cellOffset(col);
+    const y = cellOffset(row);
+
+    const ctx = this.ctx;
+    ctx.fillStyle = '#777';
+
+    ctx.fillRect(x, y, cellSize, cellSize);
+
+    if (row > 0 && this.gridLogic.cells[row - 1][col]) {
+      ctx.fillRect(x, y - gapSize, cellSize, gapSize);
+    }
+    if (col > 0 && this.gridLogic.cells[row][col - 1]) {
+      ctx.fillRect(x - gapSize, y, gapSize, cellSize);
+    }
+  }
+
   onupdate() {
     const ctx = this.ctx;
     ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
@@ -101,6 +118,14 @@ export class CanvasGrid implements m.ClassComponent<GridAttrs> {
 
     if (this.x !== undefined && this.y !== undefined) {
       this.renderCross(this.y, this.x);
+    }
+
+    for (let row = 0; row < this.gridLogic.rows; row++) {
+      for (let col = 0; col < this.gridLogic.columns; col++) {
+        if (this.gridLogic.cells[row][col]) {
+          this.renderFilled(row, col);
+        }
+      }
     }
   }
 
@@ -127,6 +152,11 @@ export class CanvasGrid implements m.ClassComponent<GridAttrs> {
         onmouseout: () => {
           this.x = undefined;
           this.y = undefined;
+        },
+        onclick: () => {
+          if (this.x !== undefined && this.y !== undefined) {
+            this.gridLogic.set(new Point(this.y, this.x), true);
+          }
         },
         width: this.canvasWidth,
         height: this.canvasHeight,
