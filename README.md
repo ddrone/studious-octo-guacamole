@@ -1,6 +1,12 @@
 ## About the project
 
-A simple optimization game
+A simple optimization game. On a rectangular grid, there is a start and an end. You can click on some of the cells to make them impossible to go through. Your goal is to make the shortest path from beginning to end as long as possible, without blocking it completely.
+
+You can play it [online](http://awesomesauce.name/maze-game), thought it might not be the latest build.
+
+## Screenshot
+
+![Screenshot of a game](./screenshot.png)
 
 ## Tasks
 
