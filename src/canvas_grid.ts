@@ -70,6 +70,22 @@ export class CanvasGrid implements m.ClassComponent<GridAttrs> {
     ctx.fill();
   }
 
+  renderCross(row: number, col: number) {
+    const ctx = this.ctx;
+    const x = cellOffset(col);
+    const y = cellOffset(row);
+
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + cellSize, y + cellSize);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(x + cellSize, y);
+    ctx.lineTo(x, y + cellSize);
+    ctx.stroke();
+  }
+
   onupdate() {
     const ctx = this.ctx;
     ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
