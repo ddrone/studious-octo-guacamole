@@ -127,6 +127,19 @@ export class CanvasGrid implements m.ClassComponent<GridAttrs> {
         }
       }
     }
+
+    const path = this.gridLogic.path;
+    if (path !== undefined) {
+      let lastPoint = path.points[0];
+      for (let i = 1; i < path.points.length; i++) {
+        const p = path.points[i];
+        ctx.beginPath();
+        ctx.moveTo(cellCenter(lastPoint.col), cellCenter(lastPoint.row));
+        ctx.lineTo(cellCenter(p.col), cellCenter(p.row));
+        ctx.stroke();
+        lastPoint = p;
+      }
+    }
   }
 
   view(vnode: m.Vnode<GridAttrs>): m.Child {
@@ -155,7 +168,7 @@ export class CanvasGrid implements m.ClassComponent<GridAttrs> {
         },
         onclick: () => {
           if (this.x !== undefined && this.y !== undefined) {
-            this.gridLogic.set(new Point(this.y, this.x), true);
+            this.gridLogic.set(new Point(this.y, this.x), !this.gridLogic.cells[this.y][this.x]);
           }
         },
         width: this.canvasWidth,

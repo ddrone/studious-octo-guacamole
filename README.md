@@ -9,7 +9,8 @@ A simple optimization game
 * [x] Highlight the cells that are a part of the shortest path
 * [ ] Draw the UI in a prettier way on a canvas
   * [x] Make the cells clickable
-  * [ ] Render the path as a curved line
+  * [x] Render the path as a straight line
 * [ ] Implement support for partial grids
 * [ ] Implement support for hexagonal grids
 * [ ] On rectangular grids, implement support for fences of variable length between the cells
+* [ ] Make the path rendering prettier by rendering it as a curved line
