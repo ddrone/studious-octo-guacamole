@@ -131,14 +131,14 @@ export class CanvasGrid implements m.ClassComponent<GridAttrs> {
     const path = this.gridLogic.path;
     if (path !== undefined) {
       let lastPoint = path.points[0];
+      ctx.beginPath();
+      ctx.moveTo(cellCenter(lastPoint.col), cellCenter(lastPoint.row));
       for (let i = 1; i < path.points.length; i++) {
         const p = path.points[i];
-        ctx.beginPath();
-        ctx.moveTo(cellCenter(lastPoint.col), cellCenter(lastPoint.row));
         ctx.lineTo(cellCenter(p.col), cellCenter(p.row));
-        ctx.stroke();
         lastPoint = p;
       }
+      ctx.stroke();
     }
   }
 
