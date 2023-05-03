@@ -148,6 +148,7 @@ export class CanvasGrid implements m.ClassComponent<GridAttrs> {
         oncreate: (vnode: m.VnodeDOM) => {
           const canvas = vnode.dom as HTMLCanvasElement;
           this.ctx = canvas.getContext("2d")!;
+          this.onupdate();
         },
         onmousemove: (e: MouseEvent) => {
           const bbox = (e.target as HTMLCanvasElement).getBoundingClientRect();

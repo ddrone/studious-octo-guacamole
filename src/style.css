@@ -1,3 +1,19 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  gap: 1rem;
+}
+
+.thin {
+  max-width: 20vw;
+}
+
 .interactive {
   user-select: none;
 }
